@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export LD_LIBRARY_PATH=/usr/local/lib
 # Set bash to 'debug' mode, it will exit on :
 # -e 'error', -u 'undefined variable', -o ... 'error in pipeline', -x 'print commands',
 set -e
@@ -46,7 +46,7 @@ if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
 	cat<<EOF
 stage -1: Downloading
 
-This recipe does not download ONIKU_KURUMI_UTAGOE_DB.zip automatically to 
+This recipe does not download ONIKU_KURUMI_UTAGOE_DB.zip automatically to
 provide you the opportunity to read the original license.
 
 Please visit http://onikuru.info/db-download/ and read the term of services,
@@ -73,8 +73,12 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     for s in ${datasets[@]};
     do
-      nnsvs-prepare-features utt_list=data/list/$s.list out_dir=$dump_org_dir/$s/  \
-        question_path=$config_question_path acoustic.f0_floor=70 acoustic.f0_ceil=390
+        nnsvs-prepare-features \
+            utt_list=data/list/$s.list \
+            out_dir=$dump_org_dir/$s/ \
+            question_path=$config_question_path \
+            acoustic.f0_floor=$config_f0_floor \
+            acoustic.f0_ceil=$config_f0_ceil
     done
 
     # Compute normalization stats for each input/output
@@ -89,7 +93,9 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
         do
             find $dump_org_dir/$train_set/${inout}_${typ} -name "*feats.npy" > train_list.txt
             scaler_path=$dump_org_dir/${inout}_${typ}_scaler.joblib
-            nnsvs-fit-scaler list_path=train_list.txt scaler.class=$scaler_class \
+            nnsvs-fit-scaler \
+                list_path=train_list.txt \
+                scaler.class=$scaler_class \
                 out_path=$scaler_path
             rm -f train_list.txt
             cp -v $scaler_path $dump_norm_dir/${inout}_${typ}_scaler.joblib
@@ -116,13 +122,16 @@ if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
     else
         resume_checkpoint=
     fi
-   xrun nnsvs-train data.train_no_dev.in_dir=$dump_norm_dir/$train_set/in_timelag/ \
+   xrun nnsvs-train \
+        data.train_no_dev.in_dir=$dump_norm_dir/$train_set/in_timelag/ \
         data.train_no_dev.out_dir=$dump_norm_dir/$train_set/out_timelag/ \
         data.dev.in_dir=$dump_norm_dir/$dev_set/in_timelag/ \
         data.dev.out_dir=$dump_norm_dir/$dev_set/out_timelag/ \
-        model=timelag train.out_dir=$expdir/timelag \
+        model=timelag \
+        train.out_dir=$expdir/timelag \
         data.batch_size=$config_batch_size \
-        resume.checkpoint=$resume_checkpoint
+        resume.checkpoint=$resume_checkpoint \
+        model.netG.in_dim=$config_timelag_in_dim
 fi
 
 if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
@@ -132,13 +141,16 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     else
         resume_checkpoint=
     fi
-    xrun nnsvs-train data.train_no_dev.in_dir=$dump_norm_dir/$train_set/in_duration/ \
+    xrun nnsvs-train \
+        data.train_no_dev.in_dir=$dump_norm_dir/$train_set/in_duration/ \
         data.train_no_dev.out_dir=$dump_norm_dir/$train_set/out_duration/ \
         data.dev.in_dir=$dump_norm_dir/$dev_set/in_duration/ \
         data.dev.out_dir=$dump_norm_dir/$dev_set/out_duration/ \
-        model=duration train.out_dir=$expdir/duration \
+        model=duration \
+        train.out_dir=$expdir/duration \
         data.batch_size=$config_batch_size \
-        resume.checkpoint=$resume_checkpoint
+        resume.checkpoint=$resume_checkpoint \
+        model.netG.in_dim=$config_duration_in_dim
 fi
 
 
@@ -149,13 +161,16 @@ if [ ${stage} -le 4 ] && [ ${stop_stage} -ge 4 ]; then
     else
         resume_checkpoint=
     fi
-    xrun nnsvs-train data.train_no_dev.in_dir=$dump_norm_dir/$train_set/in_acoustic/ \
+    xrun nnsvs-train \
+        data.train_no_dev.in_dir=$dump_norm_dir/$train_set/in_acoustic/ \
         data.train_no_dev.out_dir=$dump_norm_dir/$train_set/out_acoustic/ \
         data.dev.in_dir=$dump_norm_dir/$dev_set/in_acoustic/ \
         data.dev.out_dir=$dump_norm_dir/$dev_set/out_acoustic/ \
-        model=acoustic train.out_dir=$expdir/acoustic \
+        model=acoustic \
+        train.out_dir=$expdir/acoustic \
         data.batch_size=$config_batch_size \
-        resume.checkpoint=$resume_checkpoint
+        resume.checkpoint=$resume_checkpoint \
+        model.netG.in_dim=$config_acoustic_in_dim
 fi
 
 
@@ -166,7 +181,8 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
         for typ in timelag duration acoustic; do
             checkpoint=$expdir/$typ/latest.pth
             name=$(basename $checkpoint)
-            xrun nnsvs-generate model.checkpoint=$checkpoint \
+            xrun nnsvs-generate \
+                model.checkpoint=$checkpoint \
                 model.model_yaml=$expdir/$typ/model.yaml \
                 out_scaler_path=$dump_norm_dir/out_${typ}_scaler.joblib \
                 in_dir=$dump_norm_dir/$s/in_${typ}/ \
@@ -185,23 +201,25 @@ if [ ${stage} -le 6 ] && [ ${stop_stage} -ge 6 ]; then
             else
                 ground_truth_duration=true
             fi
-            xrun nnsvs-synthesis question_path=$config_question_path \
-            timelag.checkpoint=$expdir/timelag/latest.pth \
-            timelag.in_scaler_path=$dump_norm_dir/in_timelag_scaler.joblib \
-            timelag.out_scaler_path=$dump_norm_dir/out_timelag_scaler.joblib \
-            timelag.model_yaml=$expdir/timelag/model.yaml \
-            duration.checkpoint=$expdir/duration/latest.pth \
-            duration.in_scaler_path=$dump_norm_dir/in_duration_scaler.joblib \
-            duration.out_scaler_path=$dump_norm_dir/out_duration_scaler.joblib \
-            duration.model_yaml=$expdir/duration/model.yaml \
-            acoustic.checkpoint=$expdir/acoustic/latest.pth \
-            acoustic.in_scaler_path=$dump_norm_dir/in_acoustic_scaler.joblib \
-            acoustic.out_scaler_path=$dump_norm_dir/out_acoustic_scaler.joblib \
-            acoustic.model_yaml=$expdir/acoustic/model.yaml \
-            utt_list=./data/list/$s.list \
-            in_dir=data/acoustic/$input/ \
-            out_dir=$expdir/synthesis/$s/latest/$input \
-            ground_truth_duration=$ground_truth_duration
+            xrun nnsvs-synthesis \
+                question_path=$config_question_path \
+                timelag.checkpoint=$expdir/timelag/latest.pth \
+                timelag.in_scaler_path=$dump_norm_dir/in_timelag_scaler.joblib \
+                timelag.out_scaler_path=$dump_norm_dir/out_timelag_scaler.joblib \
+                timelag.model_yaml=$expdir/timelag/model.yaml \
+                duration.checkpoint=$expdir/duration/latest.pth \
+                duration.in_scaler_path=$dump_norm_dir/in_duration_scaler.joblib \
+                duration.out_scaler_path=$dump_norm_dir/out_duration_scaler.joblib \
+                duration.model_yaml=$expdir/duration/model.yaml \
+                acoustic.checkpoint=$expdir/acoustic/latest.pth \
+                acoustic.in_scaler_path=$dump_norm_dir/in_acoustic_scaler.joblib \
+                acoustic.out_scaler_path=$dump_norm_dir/out_acoustic_scaler.joblib \
+                acoustic.model_yaml=$expdir/acoustic/model.yaml \
+                utt_list=./data/list/$s.list \
+                in_dir=data/acoustic/$input/ \
+                out_dir=$expdir/synthesis/$s/latest/$input \
+                ground_truth_duration=$ground_truth_duration \
+                sample_rate=$config_sample_rate
         done
     done
 fi
