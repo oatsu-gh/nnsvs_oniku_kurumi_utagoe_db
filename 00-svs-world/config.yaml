@@ -31,7 +31,7 @@ label_time_unit: "100ns"
 # ONIKU_KURUMI_UTAGOE_DB contains the unvoiced vowels "I" and "U".
 # To enable the unvoiced vowels, modified version of sinsy dictionary files
 # are needed.
-sinsy_dic: "./dic"
+sinsy_dic: "./dic/sinsy"
 
 ## HTS-style question used for extracting musical/linguistic context from musicxml files
 question_path: "./conf/jp_qst001_nnsvs.hed"
@@ -67,4 +67,6 @@ timelag_allowed_range_rest: [-40, 39]
 # leave empty to disable
 pretrained_expdir:
 # batch size
-batch_size: 4
+batch_size: 8
+# thread number?
+num_workers: 8

@@ -106,9 +106,11 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
         for inout in "in" "out"; do
             for typ in timelag duration acoustic;
             do
-                nnsvs-preprocess-normalize in_dir=$dump_org_dir/$s/${inout}_${typ}/ \
+                nnsvs-preprocess-normalize \
+                    in_dir=$dump_org_dir/$s/${inout}_${typ}/ \
                     scaler_path=$dump_org_dir/${inout}_${typ}_scaler.joblib \
-                    out_dir=$dump_norm_dir/$s/${inout}_${typ}/
+                    out_dir=$dump_norm_dir/$s/${inout}_${typ}/ \
+                    num_workers=$config_num_workers
             done
         done
     done
@@ -128,6 +130,7 @@ if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
         data.dev.out_dir=$dump_norm_dir/$dev_set/out_timelag/ \
         model=timelag \
         train.out_dir=$expdir/timelag \
+        data.num_workers=$config_num_workers \
         data.batch_size=$config_batch_size \
         resume.checkpoint=$resume_checkpoint \
         model.netG.in_dim=$config_timelag_in_dim
@@ -147,6 +150,7 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
         data.dev.out_dir=$dump_norm_dir/$dev_set/out_duration/ \
         model=duration \
         train.out_dir=$expdir/duration \
+        data.num_workers=$config_num_workers \
         data.batch_size=$config_batch_size \
         resume.checkpoint=$resume_checkpoint \
         model.netG.in_dim=$config_duration_in_dim
@@ -167,6 +171,7 @@ if [ ${stage} -le 4 ] && [ ${stop_stage} -ge 4 ]; then
         data.dev.out_dir=$dump_norm_dir/$dev_set/out_acoustic/ \
         model=acoustic \
         train.out_dir=$expdir/acoustic \
+        data.num_workers=$config_num_workers \
         data.batch_size=$config_batch_size \
         resume.checkpoint=$resume_checkpoint \
         model.netG.in_dim=$config_acoustic_in_dim
