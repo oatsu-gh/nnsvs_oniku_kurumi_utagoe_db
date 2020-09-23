@@ -13,7 +13,6 @@ function xrun () {
 }
 
 script_dir=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
-NNSVS_ROOT=$script_dir/../../../
 . $script_dir/utils/yaml_parser.sh || exit 1;
 
 eval $(parse_yaml "./config.yaml" "config_")
@@ -31,7 +30,7 @@ dump_norm_dir=$dumpdir/$config_spk/norm
 stage=0
 stop_stage=0
 
-. $NNSVS_ROOT/utils/parse_options.sh || exit 1;
+. $config_nnsvs_root/utils/parse_options.sh || exit 1;
 
 # exp name
 if [ -z ${config_tag:=} ]; then
