@@ -3,38 +3,56 @@
 spk: "oniku_kurumi"
 
 ## exp tag(for managing experiments)
-tag: 
-
+tag: "jp_qst001_nnsvs"
+## Directory of NNSVS
+nnsvs_root: "$HOME/nnsvs"
 ## Directory of Unzipped singing voice database
 # PLEASE CHANGE THE PATH BASED ON YOUR ENVIRONMENT
-db_root: "~/data/ONIKU_KURUMI_UTAGOE_DB"
+db_root: "../../../ONIKU_KURUMI_UTAGOE_DB"
 
 ## Output directory
 # All the igenerated labels, intermediate files, and segmented wav files
 # will be saved in the following directory
 out_dir: "./data"
 
+## f0 estimation limits
+# Used in nnsvs-prepare-featurs.
+# Change them with some margin from lowest f0 and higest f0 in DB.
+# (kiritan: 150Hz/700Hz, oniku_kurumi: 150Hz/800Hz, Natsume_Singing_DB: 101Hz/587.33Hz)
+f0_floor: 150
+f0_ceil: 800
+
+## time unit of mono-phone label
+# The time unit of mono-phone label is scheduled to be changed from sec to 100ns.
+label_time_unit: "100ns"
 
 ### Pyinsy related settings.
 ## Sinsy dictionary directory
 # ONIKU_KURUMI_UTAGOE_DB contains the unvoiced vowels "I" and "U".
 # To enable the unvoiced vowels, modified version of sinsy dictionary files
-# are needed. 
+# are needed.
 sinsy_dic: "./dic"
 
 ## HTS-style question used for extracting musical/linguistic context from musicxml files
 question_path: "./conf/jp_qst001_nnsvs.hed"
+timelag_in_dim: 420
+duration_in_dim: 420
+acoustic_in_dim: 424
+
+## Input (Output) Sample rate of WAV files
+# select from 44100, 48000, 96000
+sample_rate: 96000 # Hz
 
 ### Data preparation related settings.
 ## Song segmentation by silence durations.
 # TODO: would be better to split songs by phrasal information in the musical scores
 # Split song by silences (in sec)
-segmentation_threshold: 0.4
+segmentation_threshold: 0.5
 # Min duration for a segment
 # note: there could be some execptions (e.g., the last segment of a song)
 segment_min_duration: 5.0
 # Force split segments if long silence is found regardless of min_duration
-force_split_threshold: 5.0
+force_split_threshold: 10.0
 # Offset correction
 # If True, offset is computed in an entire song
 # otherwise offset is computed for each segment
@@ -49,6 +67,4 @@ timelag_allowed_range_rest: [-40, 39]
 # leave empty to disable
 pretrained_expdir:
 # batch size
-batch_size: 8
-
-
+batch_size: 4
