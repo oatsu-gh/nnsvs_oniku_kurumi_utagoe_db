@@ -133,7 +133,8 @@ if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
         data.num_workers=$config_num_workers \
         data.batch_size=$config_batch_size \
         resume.checkpoint=$resume_checkpoint \
-        model.netG.in_dim=$config_timelag_in_dim
+        model.netG.in_dim=$config_timelag_in_dim \
+        train.nepochs=$config_nepochs
 fi
 
 if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
@@ -153,7 +154,8 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
         data.num_workers=$config_num_workers \
         data.batch_size=$config_batch_size \
         resume.checkpoint=$resume_checkpoint \
-        model.netG.in_dim=$config_duration_in_dim
+        model.netG.in_dim=$config_duration_in_dim \
+        train.nepochs=$config_nepochs
 fi
 
 
@@ -174,7 +176,8 @@ if [ ${stage} -le 4 ] && [ ${stop_stage} -ge 4 ]; then
         data.num_workers=$config_num_workers \
         data.batch_size=$config_batch_size \
         resume.checkpoint=$resume_checkpoint \
-        model.netG.in_dim=$config_acoustic_in_dim
+        model.netG.in_dim=$config_acoustic_in_dim \
+        train.nepochs=$config_nepochs
 fi
 
 

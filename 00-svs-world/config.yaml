@@ -3,7 +3,7 @@
 spk: "oniku_kurumi"
 
 ## exp tag(for managing experiments)
-tag: "jp_qst001_nnsvs"
+tag: "jp_qst001_nnsvs_simple_4_LLRR"
 ## Directory of NNSVS
 nnsvs_root: "$HOME/nnsvs"
 ## Directory of Unzipped singing voice database
@@ -34,25 +34,25 @@ label_time_unit: "100ns"
 sinsy_dic: "./dic/sinsy"
 
 ## HTS-style question used for extracting musical/linguistic context from musicxml files
-question_path: "./conf/jp_qst001_nnsvs.hed"
-timelag_in_dim: 420
-duration_in_dim: 420
-acoustic_in_dim: 424
+question_path: "./conf/jp_qst001_nnsvs_simple_4_LLRR.hed"
+timelag_in_dim: 417
+duration_in_dim: 417
+acoustic_in_dim: 421
 
 ## Input (Output) Sample rate of WAV files
-# select from 44100, 48000, 96000
-sample_rate: 96000 # Hz
+# select from 44100, 48000, 96000 (Hz)
+sample_rate: 48000
 
 ### Data preparation related settings.
 ## Song segmentation by silence durations.
 # TODO: would be better to split songs by phrasal information in the musical scores
 # Split song by silences (in sec)
-segmentation_threshold: 0.5
+segmentation_threshold: 0.6
 # Min duration for a segment
 # note: there could be some execptions (e.g., the last segment of a song)
-segment_min_duration: 5.0
+segment_min_duration: 4.0
 # Force split segments if long silence is found regardless of min_duration
-force_split_threshold: 10.0
+force_split_threshold: 60.0
 # Offset correction
 # If True, offset is computed in an entire song
 # otherwise offset is computed for each segment
@@ -67,6 +67,8 @@ timelag_allowed_range_rest: [-40, 39]
 # leave empty to disable
 pretrained_expdir:
 # batch size
-batch_size: 8
+batch_size: 4
 # thread number?
-num_workers: 8
+num_workers: 4
+# number of epochs
+nepochs: 200
