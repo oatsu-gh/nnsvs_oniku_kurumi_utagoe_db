@@ -3,7 +3,7 @@
 spk: "oniku_kurumi"
 
 ## exp tag(for managing experiments)
-tag: "jp_qst001_nnsvs_simple_4_LLRR"
+tag: "jp_qst001_nnsvs_simple_4_LL"
 ## Directory of NNSVS
 nnsvs_root: "$HOME/nnsvs"
 ## Directory of Unzipped singing voice database
@@ -34,10 +34,10 @@ label_time_unit: "100ns"
 sinsy_dic: "./dic/sinsy"
 
 ## HTS-style question used for extracting musical/linguistic context from musicxml files
-question_path: "./conf/jp_qst001_nnsvs_simple_4_LLRR.hed"
-timelag_in_dim: 417
-duration_in_dim: 417
-acoustic_in_dim: 421
+question_path: "./conf/jp_qst001_nnsvs_simple_4_LL.hed"
+timelag_in_dim: 348
+duration_in_dim: 348
+acoustic_in_dim: 352
 
 ## Input (Output) Sample rate of WAV files
 # select from 44100, 48000, 96000 (Hz)
@@ -67,8 +67,8 @@ timelag_allowed_range_rest: [-40, 39]
 # leave empty to disable
 pretrained_expdir:
 # batch size
-batch_size: 4
+batch_size: 8
 # thread number?
 num_workers: 4
 # number of epochs
-nepochs: 200
+nepochs: 60
