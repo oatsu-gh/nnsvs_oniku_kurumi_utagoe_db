@@ -109,8 +109,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
                 nnsvs-preprocess-normalize \
                     in_dir=$dump_org_dir/$s/${inout}_${typ}/ \
                     scaler_path=$dump_org_dir/${inout}_${typ}_scaler.joblib \
-                    out_dir=$dump_norm_dir/$s/${inout}_${typ}/ \
-                    num_workers=$config_num_workers
+                    out_dir=$dump_norm_dir/$s/${inout}_${typ}/
             done
         done
     done

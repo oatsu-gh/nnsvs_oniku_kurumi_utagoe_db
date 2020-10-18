@@ -68,5 +68,7 @@ timelag_allowed_range_rest: [-40, 39]
 pretrained_expdir:
 # batch size
 batch_size: 4
+# number of data loader
+# num_workers: 2
 # number of epochs
 nepochs: 100
