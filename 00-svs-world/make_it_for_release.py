@@ -13,8 +13,8 @@ from tqdm import tqdm
 
 SINGER = 'oniku_kurumi'
 RELEASE_DIR = 'release/onikuru_---'
-PATH_QUESTION = 'conf/jp_qst001_nnsvs_simple_4_LL.hed'
-NAME_EXPERIMENT = 'jp_qst001_nnsvs_simple_4_LL'
+PATH_QUESTION = 'conf/jp_qst001_nnsvs_simple_4-3.hed'
+NAME_EXPERIMENT = 'jp_qst001_nnsvs_simple_4-3_ecodeco'
 
 
 def copy_question(path_question, release_dir):
@@ -46,7 +46,8 @@ def copy_model(singer, name_exp, release_dir):
     makedirs(f'{release_dir}/exp/{name_exp}/acoustic', exist_ok=True)
     makedirs(f'{release_dir}/exp/{name_exp}/duration', exist_ok=True)
     makedirs(f'{release_dir}/exp/{name_exp}/timelag', exist_ok=True)
-    list_path_model = glob(f'exp/{name_exp}/*/latest.pth')
+    list_path_model = glob(f'exp/{name_exp}/*/best_loss.pth')
+    list_path_model += glob(f'exp/{name_exp}/*/latest.pth')
     list_path_model += glob(f'exp/{name_exp}/*/model.yaml')
 
     print('copying model')

@@ -3,12 +3,12 @@
 spk: "oniku_kurumi"
 
 ## exp tag(for managing experiments)
-tag: "jp_qst001_nnsvs_simple_4_LL"
+tag: "jp_qst001_nnsvs_simple_4-3_ecodeco"
 ## Directory of NNSVS
 nnsvs_root: "$HOME/nnsvs"
 ## Directory of Unzipped singing voice database
 # PLEASE CHANGE THE PATH BASED ON YOUR ENVIRONMENT
-db_root: "../../../db/ONIKU_KURUMI_UTAGOE_DB"
+db_root: "../../../db/ONIKU_KURUMI_UTAGOE_DB_declip2-6dB_ecodeco"
 
 ## Output directory
 # All the igenerated labels, intermediate files, and segmented wav files
@@ -34,14 +34,14 @@ label_time_unit: "100ns"
 sinsy_dic: "./dic/sinsy"
 
 ## HTS-style question used for extracting musical/linguistic context from musicxml files
-question_path: "./conf/jp_qst001_nnsvs_simple_4_LL.hed"
-timelag_in_dim: 348
-duration_in_dim: 348
-acoustic_in_dim: 352
+question_path: "./conf/jp_qst001_nnsvs_simple_4-3.hed"
+timelag_in_dim: 285
+duration_in_dim: 285
+acoustic_in_dim: 289
 
 ## Input (Output) Sample rate of WAV files
 # select from 44100, 48000, 96000 (Hz)
-sample_rate: 48000
+sample_rate: 96000
 
 ### Data preparation related settings.
 ## Song segmentation by silence durations.
@@ -56,8 +56,8 @@ force_split_threshold: 60.0
 # Offset correction
 # If True, offset is computed in an entire song
 # otherwise offset is computed for each segment
-global_offset_correction: False
-offset_correction_threshold: 0.01
+global_offset_correction: True
+offset_correction_threshold: 0.00
 # Time-lag constraints to filter outliers
 timelag_allowed_range: [-20, 19]
 timelag_allowed_range_rest: [-40, 39]
@@ -69,6 +69,6 @@ pretrained_expdir:
 # batch size
 batch_size: 8
 # thread number?
-num_workers: 4
+num_workers: 2
 # number of epochs
-nepochs: 60
+nepochs: 200

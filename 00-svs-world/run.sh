@@ -210,21 +210,21 @@ if [ ${stage} -le 6 ] && [ ${stop_stage} -ge 6 ]; then
             fi
             xrun nnsvs-synthesis \
                 question_path=$config_question_path \
-                timelag.checkpoint=$expdir/timelag/latest.pth \
+                timelag.checkpoint=$expdir/timelag/best_loss.pth \
                 timelag.in_scaler_path=$dump_norm_dir/in_timelag_scaler.joblib \
                 timelag.out_scaler_path=$dump_norm_dir/out_timelag_scaler.joblib \
                 timelag.model_yaml=$expdir/timelag/model.yaml \
-                duration.checkpoint=$expdir/duration/latest.pth \
+                duration.checkpoint=$expdir/duration/best_loss.pth \
                 duration.in_scaler_path=$dump_norm_dir/in_duration_scaler.joblib \
                 duration.out_scaler_path=$dump_norm_dir/out_duration_scaler.joblib \
                 duration.model_yaml=$expdir/duration/model.yaml \
-                acoustic.checkpoint=$expdir/acoustic/latest.pth \
+                acoustic.checkpoint=$expdir/acoustic/best_loss.pth \
                 acoustic.in_scaler_path=$dump_norm_dir/in_acoustic_scaler.joblib \
                 acoustic.out_scaler_path=$dump_norm_dir/out_acoustic_scaler.joblib \
                 acoustic.model_yaml=$expdir/acoustic/model.yaml \
                 utt_list=./data/list/$s.list \
                 in_dir=data/acoustic/$input/ \
-                out_dir=$expdir/synthesis/$s/latest/$input \
+                out_dir=$expdir/synthesis/$s/best_loss/$input \
                 ground_truth_duration=$ground_truth_duration \
                 sample_rate=$config_sample_rate
         done
