@@ -35,9 +35,9 @@ sinsy_dic: "./dic/sinsy"
 
 ## HTS-style question used for extracting musical/linguistic context from musicxml files
 question_path: "./conf/jp_qst001_nnsvs_simple_4-4.hed"
-timelag_in_dim: 282
-duration_in_dim: 282
-acoustic_in_dim: 286
+timelag_in_dim: 279
+duration_in_dim: 279
+acoustic_in_dim: 283
 
 ## Input (Output) Sample rate of WAV files
 # select from 44100, 48000, 96000 (Hz)
