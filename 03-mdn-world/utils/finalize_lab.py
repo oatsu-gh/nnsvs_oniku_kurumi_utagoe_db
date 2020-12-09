@@ -43,7 +43,7 @@ for d in [lab_align_dst_dir, lab_score_dst_dir]:
 
 
 base_files = sorted(glob(join(config["out_dir"], "full_dtw", "*.lab")))
-    
+
 print("Prepare data for time-lag models")
 for base in tqdm(base_files):
     utt_id = splitext(basename(base))[0]
@@ -200,11 +200,11 @@ for base in tqdm(base_files):
 
     assert exists(wav_path)
     # sr, wave = wavfile.read(wav_path)
-    wav, sr = librosa.load(wav_path, sr=48000)
+    wav, sr = librosa.load(wav_path, sr=config["sample_rate"])
 
     # gain normalize
-    wav = wav / wav.max() * 0.99
-    
+    # wav = wav / wav.max() * 0.99
+
     seg_idx = 0
     while True:
         lab_align_path = join(full_align_dir, f"{utt_id}_seg{seg_idx}.lab")

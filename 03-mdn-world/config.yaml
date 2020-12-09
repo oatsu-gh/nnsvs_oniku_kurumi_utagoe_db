@@ -3,7 +3,7 @@
 spk: "oniku_kurumi"
 
 ## exp tag(for managing experiments)
-tag: "mdn_simple_4-4"
+tag: "mdn_simple_4-4_96kHz"
 ## Directory of NNSVS
 nnsvs_root: "$HOME/nnsvs"
 ## Directory of Unzipped singing voice database
@@ -57,7 +57,7 @@ force_split_threshold: 60.0
 # If True, offset is computed in an entire song
 # otherwise offset is computed for each segment
 global_offset_correction: True
-offset_correction_threshold: 0.00
+offset_correction_threshold: 0
 # Time-lag constraints to filter outliers
 timelag_allowed_range: [-20, 19]
 timelag_allowed_range_rest: [-40, 39]
@@ -65,10 +65,10 @@ timelag_allowed_range_rest: [-40, 39]
 ### Training related settings.
 ## Pretrained model dir
 # leave empty to disable
-pretrained_expdir:
+pretrained_expdir: "exp/oniku_kurumi_mdn_simple_4-4_96kHz"
 # batch size
-batch_size: 4
+batch_size: 3
 # number of data loader
 # num_workers: 2
 # number of epochs
-nepochs: 100
+nepochs: 50
